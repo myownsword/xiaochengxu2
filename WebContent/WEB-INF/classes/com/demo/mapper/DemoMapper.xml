@@ -1,0 +1,1513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.mapper.DemoMapper">
+
+	<!--   获取用户列表   -->
+	<select id="getUserList" resultType="map">
+		/*ignoreParameter*/
+		SELECT SYS_UICM_USER.RESOURCE_ID,
+		       SYS_UICM_USER.USER_UID,
+		       SYS_UICM_USER.ID_NUMBER,
+		       SYS_UICM_USER.USER_ALIAS,
+		       SYS_UICM_USER.USER_PWD,
+		       SYS_UICM_USER.ID_TYPE,
+		       SYS_UICM_USER.IS_ACTIVE,
+		       SYS_UICM_USER.USER_FIRST_LOGIN,
+		       SYS_UICM_USER.REG_OP_STEP,
+		       SYS_UICM_USER.IS_UPD_PWD,
+		       SYS_UICM_USER.BEGIN_TIME,
+		       SYS_UICM_USER.END_TIME,
+		       SYS_UICM_USER.UNIT_UID,
+		       SYS_UICM_UNIT.UNIT_NAME,
+		       SYS_UICM_USER.OFFICE_PHONE,
+		       SYS_UICM_USER.USER_NAME,
+		       SYS_UICM_USER.NICKNAME,
+		       SYS_UICM_USER.USER_SEX,
+		       SYS_UICM_USER.USER_NAME_PINYIN,
+		       SYS_UICM_USER.USER_NAME_PINYIN_FL,
+		       SYS_UICM_USER.EMAIL,
+		       SYS_UICM_USER.MOBILE,
+		       SYS_UICM_USER.CARD_TYPE,
+		       SYS_UICM_USER.CARD_ID,
+		       SYS_UICM_USER.PASSPORT_IMG,
+		       SYS_UICM_USER.NATION,
+		       SYS_UICM_USER.NATIVE_PLACE,
+		       SYS_UICM_USER.TELEPHONE,
+		       SYS_UICM_USER.BIRTHDAY,
+		       SYS_UICM_USER.AVATAR_P_ID,
+		       SYS_UICM_USER.AVATAR_L_ID,
+		       SYS_UICM_USER.AVATAR_M_ID,
+		       SYS_UICM_USER.AVATAR_S_ID,
+		       SYS_UICM_USER.QQ_OPEN_ID,
+		       SYS_UICM_USER.WECHAT_OPEN_ID,
+		       SYS_UICM_USER.STYLE_TEMPLATE_ID,
+		       SYS_UICM_USER.UPDATE_TIME,
+		       SYS_UICM_USER.CREATE_TIME,
+		       SYS_UICM_USER.IS_DEL,
+		       SYS_UICM_USER.WECHAT_ID,
+		       SYS_UICM_USER.QQ_ID,
+		       SYS_UICM_USER.MOBILE_SHORT_NUMBER,
+		       SYS_UICM_USER.POSITIONS,
+		       SYS_UICM_USER.CREATE_USER,
+		       SYS_UICM_USER.BELONG_SERVICE,
+		       SYS_UICM_USER.QUESTION,
+		       SYS_UICM_USER.ANSWER,
+		       SYS_UICM_USER.IS_MAIN,
+		       SYS_UICM_USER.MAIN_NUMBER,
+		       SYS_UICM_USER.IS_DIRECTLY,
+		       SYS_UICM_USER.UNIT_ORDER_ID,
+		       SYS_UICM_USER.WECHAT_USER_ID,
+		       SYS_UICM_USER.FAMILY_NAME,
+		       SYS_UICM_USER.GIVEN_NAME,
+		       SYS_UICM_USER.OFFICE_PLACE,
+		       SYS_UICM_USER.SNO,
+		       SYS_UICM_USER.USER_ORIGIN,
+		       SYS_UICM_USER.OP_USER,
+		       SYS_UICM_USER.OP_TIME,
+		       SYS_UICM_USER.OP_USER_NAME,
+		       SYS_UICM_USER.USER_TYPE,
+		       SYS_UICM_USER.CARD_AVATAR,
+		       SYS_UICM_USER.USER_LEIBIE
+		  FROM SYS_UICM_USER SYS_UICM_USER, SYS_UICM_UNIT SYS_UICM_UNIT
+		WHERE SYS_UICM_USER.IS_DEL = '0'
+		  AND SYS_UICM_USER.UNIT_UID = SYS_UICM_UNIT.UNIT_ID
+		<if test=" is_hmt!='' and is_hmt!=null ">
+			AND is_hmt = #{is_hmt}
+		</if>
+		<if test=" id_number!='' and id_number!=null ">
+			AND SYS_UICM_USER.ID_NUMBER = #{id_number}
+		</if>
+		<if test=" userName!='' and userName!=null ">
+			AND SYS_UICM_USER.USER_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{userName}),'%')) </mysql> <oracle> '%'||(REPLACE(REPLACE(#{userName},'%','/%'),'_','/_'))||'%' </oracle> ]]>
+		</if>
+		<if test=" userState!='' and userState!=null ">
+			AND SYS_UICM_USER.IS_ACTIVE =#{userState}
+		</if>
+		<if test=" sno!='' and sno!=null ">
+			AND SYS_UICM_USER.SNO LIKE  <![CDATA[ <mysql> concat('%',concat(tp_replace(#{sno}),'%')) </mysql> <oracle> '%'||(REPLACE(REPLACE(#{sno},'%','/%'),'_','/_'))||'%' </oracle> ]]>
+		</if>
+		<if test=" userType_multiple=='' or userType_multiple==null ">	
+		<if test=" userType!='' and userType!=null ">
+			AND SYS_UICM_USER.ID_TYPE =#{userType}
+		</if>
+		</if>
+		<if test=" userType_multiple!='' and userType_multiple!=null ">
+			AND SYS_UICM_USER.ID_TYPE IN
+	        <foreach item="item" index="index" collection="userType_multiple" open="(" separator="," close=")">
+	        #{item}
+	        </foreach>
+		</if>
+		<if test=" user_type!='' and user_type!=null ">
+			AND SYS_UICM_USER.USER_TYPE =#{user_type}
+		</if>
+		<if test=" userleibie!='' and userleibie!=null ">
+			AND SYS_UICM_USER.USER_LEIBIE =#{userleibie}
+		</if>
+		<if test=" userUnit!='' and userUnit!=null ">
+			AND SYS_UICM_USER.UNIT_UID =#{userUnit}
+		</if>
+		<if test=" userCardId!='' and userCardId!=null ">
+			AND SYS_UICM_USER.CARD_ID LIKE  <![CDATA[ <mysql> concat('%',concat(tp_replace(#{userCardId}),'%')) </mysql> <oracle> '%'||(REPLACE(REPLACE(#{userCardId},'%','/%'),'_','/_'))||'%' </oracle> ]]>
+		</if>
+		<if test=" userOrigin!='' and userOrigin!=null ">
+			AND SYS_UICM_USER.USER_ORIGIN =#{userOrigin}
+		</if>
+		<if test=" user_type!='' and user_type!=null ">
+			AND SYS_UICM_USER.USER_TYPE =#{user_type}
+		</if>
+		<if test=" startDate!='' and startDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND SYS_UICM_USER.END_TIME >= #{startDate}
+			</mysql> 
+			<oracle>
+			AND SYS_UICM_USER.END_TIME >= to_date(#{startDate},'yyyy-mm-dd')
+			</oracle> 	
+			]]>
+		</if>
+		<if test=" endDate!='' and endDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND SYS_UICM_USER.END_TIME  <= #{endDate}
+			</mysql> 
+			<oracle>
+			AND SYS_UICM_USER.END_TIME <= to_date(#{endDate},'yyyy-mm-dd')
+			</oracle> 	
+			]]>
+		</if>
+		<if test=" UNIT_UID!='' and UNIT_UID!=null ">
+		    <if test=" UNIT_UID!='000'">
+		    	<if test=" is_select_sub_unit!='' and is_select_sub_unit!=null ">
+				AND SYS_UICM_USER.UNIT_UID in (select distinct UNIT_ID from sys_uicm_unit unit where unit.UNIT_LABLE 
+					like
+					<![CDATA[ 
+						<mysql> concat((select distinct unit2.UNIT_LABLE from sys_uicm_unit unit2 where unit2.UNIT_ID = #{UNIT_UID}),'%') </mysql> 
+						<oracle> (select distinct unit2.UNIT_LABLE from sys_uicm_unit unit2 where unit2.UNIT_ID = #{UNIT_UID})||'%' </oracle> 
+					]]>
+					)
+				</if>
+				<if test=" is_select_sub_unit=='' or is_select_sub_unit==null ">
+				AND SYS_UICM_USER.UNIT_UID=#{UNIT_UID}
+				</if>	
+				<if test=" unit_type !='' and unit_type !=null ">
+	              <if test=" unit_type == 'teacher' ">
+	                  AND SYS_UICM_USER.ID_TYPE = '3'
+	              </if>
+	              <if test=" unit_type == 'graduate' ">
+	                  AND SYS_UICM_USER.ID_TYPE = '2'
+	              </if>
+	              <if test=" unit_type == 'student' ">
+	                  AND SYS_UICM_USER.ID_TYPE = '1'
+	              </if>
+	           </if>
+			</if>
+			<if test="UNIT_UID == '000'">
+				 <if test=" unit_type =='' and unit_type ==null ">
+	              AND SYS_UICM_USER.ID_TYPE IN ('1','2','3')
+	             </if>
+	             <if test=" unit_type !='' and unit_type !=null ">
+		              <if test=" unit_type == 'teacher' ">
+		                  AND SYS_UICM_USER.ID_TYPE = '3'
+		              </if>
+		              <if test=" unit_type == 'graduate' ">
+		                  AND SYS_UICM_USER.ID_TYPE = '2'
+		              </if>
+		              <if test=" unit_type == 'student' ">
+		                  AND SYS_UICM_USER.ID_TYPE = '1'
+		              </if>
+	           </if>
+			</if>
+		</if>
+		<if test=" serviceId!='' and serviceId!=null ">
+			AND SYS_UICM_USER.BELONG_SERVICE = #{serviceId}
+		</if>
+		<if test="unitMangerSql!='' and unitMangerSql!=null">
+			AND SYS_UICM_USER.UNIT_UID in ${unitMangerSql}
+		</if>
+		
+		<if test="posmMangerSql!='' and posmMangerSql!=null">
+			AND SYS_UICM_USER.ID_NUMBER in (${posmMangerSql})
+		</if>
+		
+		<if test='is_all == "0"'>
+	        AND SYS_UICM_USER.RESOURCE_ID IN
+	        <foreach item="RESOURCE_ID" index="index" collection="resource_ids" open="(" separator="," close=")">
+	        #{RESOURCE_ID}
+	        </foreach>
+		</if>
+		<if test='is_all == "1"'>
+			AND SYS_UICM_USER.IS_ACTIVE=#{is_enable} 
+		</if>
+		
+		<if test="id_numbers!='' and id_numbers!=null">
+	        AND SYS_UICM_USER.ID_NUMBER IN
+	        <foreach item="id_number" index="index" collection="id_numbers" open="(" separator="," close=")">
+	        #{id_number}
+	        </foreach>
+		</if>
+		<if test=" unitName!='' and unitName!=null ">
+			AND SYS_UICM_USER.UNIT_NAME LIKE  concat('%',concat(tp_replace(#{unitName}),'%')) 
+		</if>
+		
+		<if test='is_valid == "1"'>
+			AND SYS_UICM_USER.IS_ACTIVE='1'
+			and (
+			<![CDATA[
+			<mysql>  (now() between SYS_UICM_USER.BEGIN_TIME and SYS_UICM_USER.END_TIME)</mysql>
+			<oracle> (sysdate between SYS_UICM_USER.BEGIN_TIME and SYS_UICM_USER.END_TIME)</oracle>
+			 ]]> 
+			 or (SYS_UICM_USER.BEGIN_TIME is null and SYS_UICM_USER.END_TIME is null))
+		</if>
+		<if test=" uam_acount_search_text!='' and uam_acount_search_text!=null ">
+			AND (SYS_UICM_USER.ID_NUMBER = #{uam_acount_search_text}
+			or SYS_UICM_USER.USER_NAME LIKE  concat('%',concat(tp_replace(#{uam_acount_search_text}),'%'))
+			or SYS_UICM_USER.UNIT_NAME LIKE  concat('%',concat(tp_replace(#{uam_acount_search_text}),'%')) )
+		</if>
+		<if test=" unit_lable!='' and unit_lable!=null ">
+			AND SYS_UICM_USER.UNIT_UID in (
+				select distinct unit.UNIT_ID 
+				  from sys_uicm_unit unit  
+				 where INSTR( unit.unit_lable,#{unit_lable} ) > 0 
+			)
+		</if>
+		<if test=" precise_user_name!='' and precise_user_name!=null ">
+			AND SYS_UICM_USER.USER_NAME =#{precise_user_name}
+		</if>
+		<if test=" id_type_condition!='' and id_type_condition!=null ">
+			AND ${id_type_condition}
+		</if>
+		
+		<!-- 
+		<![CDATA[
+		 <mysql>
+			order by UNIT_ORDER_ID is null asc,CAST(UNIT_ORDER_ID  as unsigned int) asc
+		 </mysql>
+		 <oracle>
+			order by to_number(UNIT_ORDER_ID) asc nulls last
+		 </oracle>
+		 ]]>
+		 -->
+	</select>
+	
+	<!--   用户登录成功之后获取用户的明细   -->
+	<select id="getUserInfo" resultType="map">
+		SELECT
+			RESOURCE_ID ,
+			USER_UID,
+			ID_NUMBER,
+			USER_NAME,
+			UNIT_UID,
+			UNIT_NAME,
+			ID_TYPE,
+			USER_ALIAS,
+			NICKNAME ,
+			USER_SEX ,
+			CARD_ID ,
+			AVATAR_L_ID ,
+			AVATAR_M_ID ,
+			AVATAR_S_ID,
+			AVATAR_P_ID,
+			WECHAT_ID ,
+			b.EXT1 TYPE_BELONG,
+			BELONG_LEVEL2_UID,
+			BELONG_LEVEL2_NAME
+		FROM SYS_UICM_USER a LEFT JOIN DICT_SYS_USERTYPE b ON a.ID_TYPE = b.CODEVALUE
+		WHERE ID_NUMBER = #{id_number}
+		  and IS_DEL = '0'
+	</select>
+	
+	<!--   获取用户列表   -->
+	<select id="getUserForAutocomplete" resultType="map">
+		SELECT 
+		    U.ID_NUMBER CODE,
+		    U.USER_NAME VALUE,
+		    U.USER_SEX,
+		    U.UNIT_NAME,
+		    UNIT.UNIT_LABLE
+		FROM
+		    SYS_UICM_USER U,
+		    SYS_UICM_UNIT UNIT
+		WHERE
+		    U.IS_DEL = '0'
+        AND U.UNIT_UID = UNIT.UNIT_ID
+		<if test=" id_number!='' and id_number!=null ">
+			and (ID_NUMBER = #{id_number}
+			OR USER_NAME LIKE  <![CDATA[ <mysql> concat(tp_replace(#{id_number}),'%') </mysql> <oracle> tp_replace(#{id_number})||'%' </oracle> ]]>)
+		</if>
+	</select>
+	
+	<!--   获取用户列表   -->
+	<select id="getUnitNameList" resultType="map">
+		/*ignoreParameter*/
+		SELECT
+			UNIT_ID CODE,
+			UNIT_NAME VALUE
+		FROM
+			sys_uicm_unit
+		where
+			 IS_ENABLE = '1'
+		  AND IS_DEL = '0'
+			<if test=" UNIT_NAME!='' and UNIT_NAME!=null ">
+			AND	UNIT_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{UNIT_NAME}),'%')) </mysql> <oracle> '%'||tp_replace(#{UNIT_NAME})||'%' </oracle> ]]>
+			</if>
+			<if test="unitMangerSql!='' and unitMangerSql!=null">
+			AND UNIT_ID in ${unitMangerSql}
+			</if>
+			<if test="posmMangerSql!='' and posmMangerSql!=null">
+			AND UNIT_ID in ${posmMangerSql}
+			</if>
+	</select>
+	
+	<!--   获取用户列表   -->
+	<select id="getUumUnitNameList" resultType="map">
+		/*ignoreParameter*/
+		SELECT
+			UNIT_ID CODE,
+			UNIT_NAME VALUE,
+			'' CODE2,
+			'' VALUE2,
+			UNIT_ID UNIONCODE,
+			'0' TYPE
+		FROM
+			sys_uicm_unit
+		where
+			 IS_ENABLE = '1'
+		  AND IS_DEL = '0'
+		  AND (UNIT_LEIBIE != '02' or UNIT_LEIBIE is null)
+			<if test=" UNIT_NAME!='' and UNIT_NAME!=null ">
+			AND	UNIT_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{UNIT_NAME}),'%')) </mysql> <oracle> '%'||tp_replace(#{UNIT_NAME})||'%' </oracle> ]]>
+			</if>
+			<if test="unitMangerSql!='' and unitMangerSql!=null">
+			AND UNIT_ID in ${unitMangerSql}
+			</if>
+			<if test="posmMangerSql!='' and posmMangerSql!=null">
+			AND UNIT_ID in ${posmMangerSql}
+			</if>
+		UNION ALL
+		SELECT
+			U1.UNIT_ID CODE,
+			U1.UNIT_NAME VALUE,
+			U2.UNIT_ID CODE2,
+			U2.UNIT_NAME VALUE2,
+			concat(concat(U2.UNIT_ID,','),U1.UNIT_ID) UNIONCODE,
+			'1' TYPE
+		FROM
+			sys_uicm_unit U1,sys_uicm_unit U2
+		where
+			 U1.IS_ENABLE = '1'
+		  AND U1.IS_DEL = '0'
+		  AND U2.IS_ENABLE = '1'
+		  AND U2.IS_DEL = '0'
+		  AND U1.BELONG_LEVEL2_UID = U2.UNIT_UID
+		  AND U1.UNIT_LEIBIE = '02'
+			<if test=" UNIT_NAME!='' and UNIT_NAME!=null ">
+			AND	U1.UNIT_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{UNIT_NAME}),'%')) </mysql> <oracle> '%'||tp_replace(#{UNIT_NAME})||'%' </oracle> ]]>
+			</if>
+			<if test="unitMangerSql!='' and unitMangerSql!=null">
+			AND U1.UNIT_ID in ${unitMangerSql}
+			</if>
+			<if test="posmMangerSql!='' and posmMangerSql!=null">
+			AND U1.UNIT_ID in ${posmMangerSql}
+			</if>
+	</select>
+	<!-- 新增用户 -->
+	<insert id="addUser">
+	/*ignoreParameter*/
+		insert into sys_uicm_user(
+				RESOURCE_ID,
+				USER_UID,
+				ID_NUMBER,
+				USER_ALIAS,
+				USER_PWD,
+				IS_ACTIVE,
+				ID_TYPE,
+				USER_FIRST_LOGIN,
+				REG_OP_STEP,
+				IS_UPD_PWD,
+				UNIT_UID,
+				UNIT_NAME,
+				OFFICE_PHONE,
+				USER_NAME,
+				FAMILY_NAME,
+				GIVEN_NAME,
+				NICKNAME,
+				USER_SEX,
+				USER_NAME_PINYIN,
+				USER_NAME_PINYIN_FL,
+				EMAIL,
+				MOBILE,
+				CARD_TYPE,
+				CARD_ID,
+				PASSPORT_IMG,
+				NATION,
+				NATIVE_PLACE,
+				TELEPHONE,
+				AVATAR_P_ID,
+				AVATAR_L_ID,
+				AVATAR_M_ID,
+				AVATAR_S_ID,
+				UPDATE_TIME,
+				CREATE_TIME,
+				BIRTHDAY,
+				BEGIN_TIME,
+				END_TIME,
+				WECHAT_ID,
+				QQ_ID,
+				IS_DEL ,
+				BELONG_SERVICE ,
+				CREATE_USER ,
+				OFFICE_PLACE ,
+				SNO,
+				<if test="USER_ORIGIN!='' and USER_ORIGIN!=null">
+				USER_ORIGIN,
+				</if>
+				OP_USER,
+				OP_TIME,
+				OP_USER_NAME,
+				USER_TYPE,
+				USER_LEIBIE,
+				IS_OPEN_YUNFILE,
+				IS_OPEN_VPN,
+				WECHAT_USER_ID,
+				BELONG_LEVEL2_UID,
+				BELONG_LEVEL2_NAME
+				<if test=" is_hmt!='' and is_hmt!=null ">
+					,is_hmt
+				</if>
+		) values(
+				#{RESOURCE_ID,jdbcType=VARCHAR},
+				#{USER_UID,jdbcType=VARCHAR},
+				#{ID_NUMBER,jdbcType=VARCHAR},
+				#{USER_ALIAS,jdbcType=VARCHAR},
+				#{USER_PWD,jdbcType=VARCHAR},
+				#{IS_ACTIVE,jdbcType=VARCHAR},
+				#{ID_TYPE,jdbcType=VARCHAR},
+				'1',
+				'1',
+				'1',
+				#{UNIT_NAME_code,jdbcType=VARCHAR},
+				#{UNIT_NAME,jdbcType=VARCHAR},
+				#{OFFICE_PHONE,jdbcType=VARCHAR},
+				#{USER_NAME,jdbcType=VARCHAR},
+				#{FAMILY_NAME,jdbcType=VARCHAR},
+				#{GIVEN_NAME,jdbcType=VARCHAR},
+				#{NICKNAME,jdbcType=VARCHAR},
+				#{USER_SEX,jdbcType=VARCHAR},
+				#{USER_NAME_PINYIN,jdbcType=VARCHAR},
+				#{USER_NAME_PINYIN_FL,jdbcType=VARCHAR},
+				#{EMAIL,jdbcType=VARCHAR},
+				#{MOBILE,jdbcType=VARCHAR},
+				#{CARD_TYPE,jdbcType=VARCHAR},
+				#{CARD_ID,jdbcType=VARCHAR},
+				#{cardPic,jdbcType=VARCHAR},
+				#{NATION,jdbcType=VARCHAR},
+				#{NATIVE_PLACE,jdbcType=VARCHAR},
+				#{TELEPHONE,jdbcType=VARCHAR},
+				#{userPic,jdbcType=VARCHAR},
+				#{userPic_L,jdbcType=VARCHAR},
+				#{userPic_L,jdbcType=VARCHAR},
+				#{userPic_S,jdbcType=VARCHAR},
+				
+				
+			<![CDATA[
+			 <mysql>
+			 	#{UPDATE_TIME},
+				#{CREATE_TIME},
+				#{BIRTHDAY,jdbcType=VARCHAR},
+				#{BEGIN_TIME,jdbcType=VARCHAR},
+				#{END_TIME,jdbcType=VARCHAR},
+			 </mysql>
+			 <oracle>
+			 	to_date(#{UPDATE_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+				to_date(#{CREATE_TIME,jdbcType=VARCHAR} , 'yyyy-MM-dd hh24:mi:ss'),
+				to_date(#{BIRTHDAY,jdbcType=VARCHAR} , 'yyyy-MM-dd'),
+				to_date(#{BEGIN_TIME,jdbcType=VARCHAR},'yyyy-MM-dd'),
+				to_date(#{END_TIME,jdbcType=VARCHAR},'yyyy-MM-dd'),
+			 </oracle>
+			 ]]>
+				
+				#{WECHAT_ID,jdbcType=VARCHAR},
+				#{QQ_ID,jdbcType=VARCHAR},
+				'0',
+				#{BELONG_SERVICE,jdbcType=VARCHAR},
+				#{CREATE_USER,jdbcType=VARCHAR},
+				#{OFFICE_PLACE,jdbcType=VARCHAR},
+				#{SNO,jdbcType=VARCHAR},
+				<if test="USER_ORIGIN!='' and USER_ORIGIN!=null">
+				#{USER_ORIGIN,jdbcType=VARCHAR},
+				</if>
+				#{OP_USER,jdbcType=VARCHAR},
+				<![CDATA[
+				 <mysql>
+				 	#{UPDATE_TIME},
+				 </mysql>
+				 <oracle>
+				 	to_date(#{UPDATE_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+				 </oracle>
+				 ]]>
+				#{OP_USER_NAME,jdbcType=VARCHAR},
+				#{USER_TYPE,jdbcType=VARCHAR},
+				#{USERLEIBIE,jdbcType=VARCHAR},
+				#{IS_OPEN_YUNFILE,jdbcType=VARCHAR},
+				#{IS_OPEN_VPN,jdbcType=VARCHAR},
+				#{WECHAT_USER_ID,jdbcType=VARCHAR},
+				#{BELONG_LEVEL2_UID,jdbcType=VARCHAR},
+				#{BELONG_LEVEL2_NAME,jdbcType=VARCHAR}
+				<if test=" is_hmt!='' and is_hmt!=null ">
+					,#{is_hmt,jdbcType=VARCHAR}
+				</if>
+		)	
+	</insert>
+	<!--   判断登录名或者别名是否存在  -->
+	<select id="getUserByIdOrAlias" resultType="map">
+		SELECT
+			USER_UID
+		FROM SYS_UICM_USER
+		WHERE 1=1
+		  AND IS_DEL = '0'
+		<if test=" RESOURCE_ID!='' and RESOURCE_ID!=null ">
+			AND RESOURCE_ID!=#{RESOURCE_ID}
+		</if>
+		<if test=" ID_NUMBER!='' and ID_NUMBER!=null ">
+			AND ID_NUMBER = #{ID_NUMBER}
+		</if>
+		<if test=" USER_ALIAS!='' and USER_ALIAS!=null ">
+			AND USER_ALIAS = #{USER_ALIAS}
+		</if>
+	</select>
+	
+	<!--   根据主键获取用户详细信息  -->
+	<select id="getUserById" resultType="map">
+		SELECT RESOURCE_ID,
+		       USER_UID,
+		       ID_NUMBER,
+		       USER_ALIAS,
+		       USER_PWD,
+		       ID_TYPE,
+		       IS_ACTIVE,
+		       USER_FIRST_LOGIN,
+		       REG_OP_STEP,
+		       IS_UPD_PWD,
+		       BEGIN_TIME,
+		       END_TIME,
+		       UNIT_UID,
+		       UNIT_NAME,
+		       OFFICE_PHONE,
+		       USER_NAME,
+		       NICKNAME,
+		       USER_SEX,
+		       USER_NAME_PINYIN,
+		       USER_NAME_PINYIN_FL,
+		       EMAIL,
+		       MOBILE,
+		       CARD_TYPE,
+		       CARD_ID,
+		       PASSPORT_IMG,
+		       NATION,
+		       NATIVE_PLACE,
+		       TELEPHONE,
+		       BIRTHDAY,
+		       AVATAR_P_ID,
+		       AVATAR_L_ID,
+		       AVATAR_M_ID,
+		       AVATAR_S_ID,
+		       QQ_OPEN_ID,
+		       WECHAT_OPEN_ID,
+		       STYLE_TEMPLATE_ID,
+		       UPDATE_TIME,
+		       CREATE_TIME,
+		       IS_DEL,
+		       WECHAT_ID,
+		       QQ_ID,
+		       MOBILE_SHORT_NUMBER,
+		       POSITIONS,
+		       CREATE_USER,
+		       BELONG_SERVICE,
+		       QUESTION,
+		       ANSWER,
+		       IS_MAIN,
+		       MAIN_NUMBER,
+		       IS_DIRECTLY,
+		       UNIT_ORDER_ID,
+		       WECHAT_USER_ID,
+		       FAMILY_NAME,
+		       GIVEN_NAME,
+		       OFFICE_PLACE,
+		       SNO,
+		       USER_ORIGIN,
+		       OP_USER,
+		       OP_TIME,
+		       OP_USER_NAME,
+		       USER_TYPE,
+		       CARD_AVATAR,
+		       USER_LEIBIE,
+		       IS_OPEN_YUNFILE,
+			   IS_OPEN_VPN,
+			   BELONG_LEVEL2_UID,
+			   BELONG_LEVEL2_NAME
+		  FROM SYS_UICM_USER
+	  where IS_DEL = '0'
+	  <if test=" is_hmt!='' and is_hmt!=null ">
+			and is_hmt=#{is_hmt}
+	  </if>
+	  <if test=" RESOURCE_ID!=null and RESOURCE_ID!='' ">
+		AND RESOURCE_ID=#{RESOURCE_ID}
+	  </if>
+	  <if test=" ID_NUMBER!=null and ID_NUMBER!='' ">
+		AND ID_NUMBER=#{ID_NUMBER}
+	  </if>
+	  <if test=" USER_UID!=null and USER_UID!='' ">
+		AND USER_UID=#{USER_UID}
+	  </if>
+	</select>
+	
+	<!-- 根据用户主键修改用户信息 -->
+	<update id="updUserById">
+	/*ignoreParameter*/
+		UPDATE sys_uicm_user
+		SET 
+			<![CDATA[
+			 <mysql>
+			 	BEGIN_TIME = #{BEGIN_TIME,jdbcType=VARCHAR},
+				END_TIME = #{END_TIME,jdbcType=VARCHAR},
+				BIRTHDAY = #{BIRTHDAY,jdbcType=VARCHAR},
+				UPDATE_TIME=#{UPDATE_TIME},
+			 </mysql>
+			 <oracle>
+			 	BEGIN_TIME = to_date(#{BEGIN_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+				END_TIME = to_date(#{END_TIME,jdbcType=VARCHAR} , 'yyyy-MM-dd'),
+				BIRTHDAY = to_date(#{BIRTHDAY,jdbcType=VARCHAR} , 'yyyy-MM-dd'),
+				UPDATE_TIME=to_date(#{UPDATE_TIME,jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss'),
+			 </oracle>
+			 ]]>
+			ID_NUMBER = #{ID_NUMBER,jdbcType=VARCHAR},
+			USER_ALIAS = #{USER_ALIAS,jdbcType=VARCHAR},
+			ID_TYPE = #{ID_TYPE,jdbcType=VARCHAR},
+			USER_TYPE = #{USER_TYPE,jdbcType=VARCHAR},
+			USER_LEIBIE = #{USERLEIBIE,jdbcType=VARCHAR},
+			<if test=" USER_PWD!='' and USER_PWD!=null ">
+			USER_PWD = #{USER_PWD,jdbcType=VARCHAR},
+			</if>
+			IS_ACTIVE = #{IS_ACTIVE,jdbcType=VARCHAR},
+			UNIT_UID  = #{UNIT_NAME_code,jdbcType=VARCHAR},
+			UNIT_NAME = #{UNIT_NAME,jdbcType=VARCHAR},
+			OFFICE_PHONE = #{OFFICE_PHONE,jdbcType=VARCHAR},
+			USER_NAME = #{USER_NAME,jdbcType=VARCHAR},
+			FAMILY_NAME = #{FAMILY_NAME,jdbcType=VARCHAR},
+		    GIVEN_NAME = #{GIVEN_NAME,jdbcType=VARCHAR},
+			NICKNAME = #{NICKNAME,jdbcType=VARCHAR},
+			USER_SEX = #{USER_SEX,jdbcType=VARCHAR},
+			USER_NAME_PINYIN = #{USER_NAME_PINYIN,jdbcType=VARCHAR},
+			USER_NAME_PINYIN_FL = #{USER_NAME_PINYIN_FL,jdbcType=VARCHAR},
+			EMAIL = #{EMAIL,jdbcType=VARCHAR},
+			MOBILE = #{MOBILE,jdbcType=VARCHAR},
+			CARD_TYPE = #{CARD_TYPE,jdbcType=VARCHAR},
+			CARD_ID = #{CARD_ID,jdbcType=VARCHAR},
+			PASSPORT_IMG = #{cardPic,jdbcType=VARCHAR},
+			NATION = #{NATION,jdbcType=VARCHAR},
+			NATIVE_PLACE = #{NATIVE_PLACE,jdbcType=VARCHAR},
+			TELEPHONE = #{TELEPHONE,jdbcType=VARCHAR},
+			AVATAR_P_ID = #{userPic,jdbcType=VARCHAR},
+			AVATAR_L_ID = #{userPic_L,jdbcType=VARCHAR},
+			AVATAR_M_ID = #{userPic_L,jdbcType=VARCHAR},
+			AVATAR_S_ID = #{userPic_S,jdbcType=VARCHAR},
+			WECHAT_ID=#{WECHAT_ID,jdbcType=VARCHAR},
+			OFFICE_PLACE=#{OFFICE_PLACE,jdbcType=VARCHAR},
+			IS_OPEN_YUNFILE=#{IS_OPEN_YUNFILE,jdbcType=VARCHAR},
+			IS_OPEN_VPN=#{IS_OPEN_VPN,jdbcType=VARCHAR},
+			WECHAT_USER_ID=#{WECHAT_USER_ID,jdbcType=VARCHAR},
+			SNO=#{SNO,jdbcType=VARCHAR},
+			<if test="USER_ORIGIN!='' and USER_ORIGIN!=null">
+			USER_ORIGIN=#{USER_ORIGIN,jdbcType=VARCHAR},
+			</if>
+			OP_USER=#{OP_USER,jdbcType=VARCHAR},
+			<![CDATA[
+			 <mysql>
+			 	OP_TIME=#{UPDATE_TIME},
+			 </mysql>
+			 <oracle>
+			 	OP_TIME=to_date(#{UPDATE_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+			 </oracle>
+			 ]]>
+			OP_USER_NAME=#{OP_USER_NAME,jdbcType=VARCHAR},
+			QQ_ID=#{QQ_ID,jdbcType=VARCHAR},
+			BELONG_LEVEL2_UID=#{BELONG_LEVEL2_UID,jdbcType=VARCHAR},
+			BELONG_LEVEL2_NAME=#{BELONG_LEVEL2_NAME,jdbcType=VARCHAR}
+			<if test=" BELONG_SERVICE!=null and BELONG_SERVICE!='' ">
+			, BELONG_SERVICE = #{BELONG_SERVICE}
+			</if>
+	    where RESOURCE_ID=#{RESOURCE_ID}
+	</update>
+	
+	<!-- 设置非直属 -->
+	<update id="updNotDirectlyById">
+		UPDATE sys_uicm_user
+		SET 
+			UNIT_UID = #{UNIT_UID},
+			UNIT_NAME = #{UNIT_NAME},
+			BELONG_LEVEL2_UID=#{BELONG_LEVEL2_UID,jdbcType=VARCHAR},
+			BELONG_LEVEL2_NAME=#{BELONG_LEVEL2_NAME,jdbcType=VARCHAR}
+	    where ID_NUMBER=#{ID_NUMBER}
+	</update>
+	
+	<delete id="deleteUserById" parameterType="string">
+		delete from sys_uicm_user where resource_id = #{resource_id}
+	</delete>
+	
+	<delete id="deleteUserLogicById">
+		UPDATE sys_uicm_user
+		SET IS_DEL = '1'
+	    where RESOURCE_ID=#{resource_id}
+	</delete>
+	
+	<!--   根据用户账号查询用户信息  -->
+	<select id="getUserInfoApi" resultType="map">
+		SELECT 
+	         t.unit_name UNIT_NAME,
+	         t.mobile MOBILE,
+	         t.user_name USER_NAME,
+	         t.email EMAIL,
+	         t2.codename NATION,
+	         t.positions POSITIONS,
+	         t.native_place NATIVE_PLACE,
+	         t.unit_uid UNIT_UID,
+	         t.office_phone OFFICE_PHONE,
+	         t.user_sex USER_SEX,
+	         t.id_number ID_NUMBER
+         FROM SYS_UICM_USER t
+               left join DICT_COMM_NATIONALITY t2 
+                    on t.nation=t2.codevalue
+         WHERE ID_NUMBER = #{id_number}
+		  and IS_DEL = '0'
+	</select>
+	
+	
+	<!--   获取用户列表   -->
+	<select id="getIdentyList" resultType="map">
+		/*ignoreParameter*/
+		SELECT
+			RESOURCE_ID,
+			ID_NUMBER,
+			UNIT_NAME,
+			USER_NAME,
+			ID_TYPE
+		FROM SYS_UICM_USER
+		WHERE IS_DEL = '0'
+		AND IS_MAIN = '1'
+		<if test=" id_number!='' and id_number!=null ">
+			AND SYS_UICM_USER.ID_NUMBER = #{id_number}
+		</if>
+		<if test=" is_hmt!='' and is_hmt!=null ">
+			and is_hmt = #{is_hmt} 
+	  	</if>
+		<if test=" user_name!='' and user_name!=null ">
+			AND SYS_UICM_USER.USER_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{user_name}),'%')) </mysql> <oracle> '%'||tp_replace(#{user_name})||'%' </oracle> ]]>
+		</if>
+		<if test=" unit_name!='' and unit_name!=null ">
+			AND SYS_UICM_USER.UNIT_UID = #{unit_name}
+		</if>
+		<if test=" user_type!='' and user_type!=null ">
+			AND ID_TYPE = #{user_type}
+		</if>
+	</select>
+	<select id="idIsExist" resultType="map">
+		select
+			IS_MAIN,
+			<![CDATA[ <mysql>IFNULL(MAIN_NUMBER, '')</mysql><oracle>nvl(MAIN_NUMBER, '')</oracle>]]> MAIN_NUMBER
+		from
+			SYS_UICM_USER uu
+		where
+			uu.ID_NUMBER = #{id_number}
+		and uu.USER_NAME = #{user_name}
+	</select>
+	<update id="addIdenty">
+		update sys_uicm_user
+		set IS_MAIN = '1',
+			<![CDATA[ 
+				<mysql>UPDATE_TIME = #{UPDATE_TIME}</mysql>
+				<oracle>UPDATE_TIME = to_date(#{UPDATE_TIME}, 'yyyy-MM-dd HH24:mi:ss')</oracle>
+			]]>
+	    where ID_NUMBER = #{ID_NUMBER}
+	</update>
+	<delete id="cancelTie">
+		update sys_uicm_user
+		set IS_MAIN = '0',
+			MAIN_NUMBER = ''
+	    where ID_NUMBER = #{ID_NUMBER}
+	</delete>
+	<update id="addViceIdenty">
+		update sys_uicm_user
+		set MAIN_NUMBER = #{MAIN_NUMBER},
+			<![CDATA[ 
+				<mysql>UPDATE_TIME = #{UPDATE_TIME}</mysql>
+				<oracle>UPDATE_TIME = to_date(#{UPDATE_TIME}, 'yyyy-MM-dd HH24:mi:ss')</oracle>
+			]]>
+	    where ID_NUMBER = #{ID_NUMBER}
+	</update>
+	<update id="setMainIdenty">
+		update sys_uicm_user
+		set IS_MAIN = '1',
+			MAIN_NUMBER = '',
+			<![CDATA[ 
+				<mysql>UPDATE_TIME = #{UPDATE_TIME}</mysql>
+				<oracle>UPDATE_TIME = to_date(#{UPDATE_TIME}, 'yyyy-MM-dd HH24:mi:ss')</oracle>
+			]]>
+	    where ID_NUMBER = #{ID_NUMBER}
+	</update>
+	<update id="setViceIdenty">
+		update sys_uicm_user
+		set IS_MAIN = '0',
+			MAIN_NUMBER = #{ID_NUMBER},
+			<![CDATA[ 
+				<mysql>UPDATE_TIME = #{UPDATE_TIME}</mysql>
+				<oracle>UPDATE_TIME = to_date(#{UPDATE_TIME}, 'yyyy-MM-dd HH24:mi:ss')</oracle>
+			]]>
+	    where ID_NUMBER = #{MAIN_NUMBER} or MAIN_NUMBER = #{MAIN_NUMBER}
+	</update>
+	<select id="viceListById" resultType="map">
+		SELECT
+			RESOURCE_ID,
+			ID_NUMBER,
+			UNIT_NAME,
+			USER_NAME,
+			ID_TYPE
+		FROM SYS_UICM_USER
+		WHERE IS_DEL = '0'
+		AND IS_MAIN = '0'
+		AND MAIN_NUMBER = #{id_number}
+	</select>
+	
+	<!-- 新增用户ldap数据 -->
+	<insert id="addUserOpLog">
+	insert into sys_uicm_user_op_log
+		  (op_id,
+		   op_type,
+		   op_time,
+		   is_sync_ldap,
+		   op_id_number,
+		   id_number,
+		   user_id,
+		   user_name,
+		   family_name,
+		   given_name,
+		   user_sex,
+		   nation,
+		   native_place,
+		   office_phone,
+		   email,
+		   mobile,
+		   positions,
+		   unit_uid,
+		   unit_name,
+		   is_active,
+		   id_type,
+		   op_detail
+		   <if test=" PWD_TYPE!='' and PWD_TYPE!=null ">
+		   ,init_pwd
+		   </if>
+		   )
+		values
+		  (#{OP_ID,jdbcType=VARCHAR},
+		   #{OP_TYPE,jdbcType=VARCHAR},
+		   <![CDATA[
+			 <mysql>
+				#{OP_TIME},
+			 </mysql>
+			 <oracle>
+			 	to_date(#{OP_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+			 </oracle>
+			 ]]>
+		   '0',
+		   #{OP_ID_NUMBER,jdbcType=VARCHAR},
+		   #{ID_NUMBER,jdbcType=VARCHAR},
+		   #{USER_ID,jdbcType=VARCHAR},
+		   #{USER_NAME,jdbcType=VARCHAR},
+		   #{FAMILY_NAME,jdbcType=VARCHAR},
+		   #{GIVEN_NAME,jdbcType=VARCHAR},
+		   #{USER_SEX,jdbcType=VARCHAR},
+		   #{NATION,jdbcType=VARCHAR},
+		   #{NATIVE_PLACE,jdbcType=VARCHAR},
+		   #{OFFICE_PHONE,jdbcType=VARCHAR},
+		   #{EMAIL,jdbcType=VARCHAR},
+		   #{MOBILE,jdbcType=VARCHAR},
+		   #{POSITIONS,jdbcType=VARCHAR},
+		   #{UNIT_UID,jdbcType=VARCHAR},
+		   #{UNIT_NAME,jdbcType=VARCHAR},
+		   #{IS_ACTIVE,jdbcType=VARCHAR},
+		   #{ID_TYPE,jdbcType=VARCHAR},
+		   #{OP_DETAIL,jdbcType=VARCHAR}
+		   <if test=" PWD_TYPE!='' and PWD_TYPE!=null ">
+		   <if test="PWD_TYPE==6">
+		   <![CDATA[
+			 <mysql> ,HEX(AES_ENCRYPT(#{INIT_PWD,jdbcType=VARCHAR} ,  (select salt  from sys_uicm_user_salt where id_number = #{ID_NUMBER}) ) ) </mysql>
+			 <oracle> ,encrypt_des(#{INIT_PWD,jdbcType=VARCHAR} ,  (select salt  from sys_uicm_user_salt where id_number = #{ID_NUMBER})  ) </oracle>
+		 ]]>
+		 </if>
+		 <if test="PWD_TYPE!=6">
+		   <![CDATA[
+			 <mysql> ,HEX(AES_ENCRYPT(#{INIT_PWD,jdbcType=VARCHAR} , 'tp_neusoft')) </mysql>
+			 <oracle> ,encrypt_des(#{INIT_PWD,jdbcType=VARCHAR} ,  'tp_neusoft'  ) </oracle>
+		 ]]>
+		 </if>
+		 </if>
+		   )
+	</insert>
+	
+	<!-- 新增用户临时表数据 -->
+	<insert id="INS_SYS_IMP_USER">
+	/*ignoreParameter*/
+		insert into sys_import_user_info
+		  (resource_id,
+		   id_number,
+		   user_alias,
+		   user_pwd,
+		   id_type,
+		   begin_time,
+		   end_time,
+		   unit_name,
+		   unit_uid,
+		   office_phone,
+		   user_name,
+		   nickname,
+		   user_sex,
+		   email,
+		   mobile,
+		   card_type,
+		   card_id,
+		   nation,
+		   native_place,
+		   telephone,
+		   birthday,
+		   qq_open_id,
+		   wechat_open_id,
+		   style_template_id,
+		   wechat_id,
+		   qq_id,
+		   mobile_short_number,
+		   positions,
+		   import_time,
+		   process_status,
+		   process_error_info,
+		   is_active,
+		   opt_type,
+		   lable_name
+		    <if test=" is_hmt!='' and is_hmt!=null ">
+			, is_hmt
+	  		</if>
+		   )
+		values
+		  (#{RESOURCE_ID,jdbcType=VARCHAR},
+		   #{ID_NUMBER,jdbcType=VARCHAR},
+		   #{USER_ALIAS,jdbcType=VARCHAR},
+		   #{USER_PWD,jdbcType=VARCHAR},
+		   #{ID_TYPE,jdbcType=VARCHAR},
+		   #{BEGIN_TIME,jdbcType=VARCHAR},
+		   #{END_TIME,jdbcType=VARCHAR},
+		   #{UNIT_NAME,jdbcType=VARCHAR},
+		   (select unit_id from sys_uicm_unit unit where unit.unit_name = #{UNIT_NAME}  <![CDATA[
+				 <mysql> 
+					LIMIT 1
+				 </mysql>
+				 <oracle> 
+				 	and ROWNUM=1
+				 </oracle>
+			 ]]>),
+		   #{OFFICE_PHONE,jdbcType=VARCHAR},
+		   #{USER_NAME,jdbcType=VARCHAR},
+		   #{NICKNAME,jdbcType=VARCHAR},
+		   #{USER_SEX,jdbcType=VARCHAR},
+		   #{EMAIL,jdbcType=VARCHAR},
+		   #{MOBILE,jdbcType=VARCHAR},
+		   #{CARD_TYPE,jdbcType=VARCHAR},
+		   #{CARD_ID,jdbcType=VARCHAR},
+		   #{NATION,jdbcType=VARCHAR},
+		   #{NATIVE_PLACE,jdbcType=VARCHAR},
+		   #{TELEPHONE,jdbcType=VARCHAR},
+		   #{BIRTHDAY,jdbcType=VARCHAR},
+		   '',
+		   '',
+		   '',
+		   '',
+		   '',
+		   '',
+		   '',
+		   <![CDATA[
+			 <mysql>
+			 	#{CREATE_TIME,jdbcType=TIMESTAMP},
+			 </mysql>
+			 <oracle>
+			 	to_date(#{CREATE_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+			 </oracle>
+			 ]]>
+		   '0',
+		   '',
+		   #{IS_ACTIVE,jdbcType=VARCHAR},
+		   #{OPT_TYPE,jdbcType=VARCHAR},
+		   #{LABLE_NAME,jdbcType=VARCHAR}
+		   <if test=" is_hmt!='' and is_hmt!=null ">
+			, #{is_hmt,jdbcType=VARCHAR} 
+	  		</if>
+		   )
+	</insert>
+	
+	<!--   获取临时用户列表   -->
+	<select id="getImportUserList" resultType="map">
+		SELECT RESOURCE_ID,
+		       ID_NUMBER,
+		       USER_ALIAS,
+		       USER_PWD,
+		       ID_TYPE,
+		       BEGIN_TIME,
+		       END_TIME,
+		       UNIT_UID,
+		       UNIT_NAME,
+		       OFFICE_PHONE,
+		       USER_NAME,
+		       NICKNAME,
+		       USER_SEX,
+		       EMAIL,
+		       MOBILE,
+		       CARD_TYPE,
+		       CARD_ID,
+		       NATION,
+		       NATIVE_PLACE,
+		       TELEPHONE,
+		       BIRTHDAY,
+		       QQ_OPEN_ID,
+		       WECHAT_OPEN_ID,
+		       STYLE_TEMPLATE_ID,
+		       WECHAT_ID,
+		       QQ_ID,
+		       MOBILE_SHORT_NUMBER,
+		       POSITIONS,
+		       IMPORT_TIME,
+		       PROCESS_STATUS,
+		       PROCESS_ERROR_INFO,
+			   PROCESS_TIME,
+			   IS_ACTIVE,
+			   OPT_TYPE,
+			   LABLE_NAME
+		  FROM sys_import_user_info
+		<where>
+		<if test=" is_hmt!='' and is_hmt!=null ">
+			AND is_hmt=#{is_hmt} 
+	  	</if>
+		<if test=" id_number!='' and id_number!=null ">
+			AND ID_NUMBER = #{id_number}
+		</if>
+		<if test=" userName!='' and userName!=null ">
+			AND USER_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{userName}),'%')) </mysql> <oracle> '%'||(REPLACE(REPLACE(#{userName},'%','/%'),'_','/_'))||'%' </oracle> ]]>
+		</if>
+		<if test=" process_status_select!='' and process_status_select!=null ">
+			AND PROCESS_STATUS =#{process_status_select}
+		</if>
+		<if test=" opt_type_select!='' and opt_type_select!=null ">
+			AND OPT_TYPE =#{opt_type_select}
+		</if>
+		<if test=" startDate!='' and startDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND PROCESS_TIME >= concat(#{startDate},' 00:00:00')
+			</mysql> 
+			<oracle>
+			AND PROCESS_TIME >= to_date(#{startDate}||' 00:00:00','yyyy-mm-dd hh24:mi:ss')
+			</oracle> 	
+			]]>
+		</if>
+		<if test=" endDate!='' and endDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND PROCESS_TIME  <= concat(#{endDate},' 23:59:59')
+			</mysql> 
+			<oracle>
+			AND PROCESS_TIME <= to_date(#{endDate}||' 23:59:59','yyyy-mm-dd hh24:mi:ss')
+			</oracle> 	
+			]]>
+		</if>
+		</where>
+		order by IMPORT_TIME desc
+		
+	</select>
+	
+	<select id="getUserLableList" resultType="map">
+		SELECT 
+		    a.LABEL_ID, 
+		    a.LABEL_NAME
+		FROM
+		    SYS_LABEL_INFO a
+	    where a.IS_ENABLE = '1'
+	      AND INSTR( a.total_label_num, #{lable_type}) > 0 
+	</select> 
+	
+	<delete id="delImportUserById" parameterType="string">
+		delete from sys_import_user_info where resource_id = #{resource_id}
+	</delete>
+	
+	<select id="getSexTypeList" resultType="map">
+		SELECT CODEVALUE, CODENAME, EXT1, EXT2, IS_VALID, ORDERATTR
+  		  FROM DICT_COMM_GENDER
+  		 WHERE IS_VALID = '1'
+		ORDER BY ORDERATTR ASC
+	</select>
+	
+	<select id="getIdentityTypeList" resultType="map">
+		SELECT CODEVALUE, CODENAME, EXT1, EXT2, IS_VALID, ORDERATTR
+  		  FROM DICT_SYS_USERTYPE
+  		 WHERE IS_VALID = '1'
+  		 <if test=" IDTYPE_NAME!='' and IDTYPE_NAME!=null ">
+			AND CODENAME LIKE  concat('%',concat(tp_replace(#{IDTYPE_NAME}),'%'))  escape '/'
+		 </if>
+		ORDER BY ORDERATTR ASC
+	</select>
+	
+	<select id="getNationTypeList" resultType="map">
+		SELECT CODEVALUE, CODENAME, EXT1, EXT2, IS_VALID, ORDERATTR
+  		  FROM DICT_COMM_NATIONALITY
+  		 WHERE IS_VALID = '1'
+		ORDER BY ORDERATTR ASC
+	</select>
+	
+	<select id="getImportUserInfo" parameterType="object" resultType="java.util.Map">
+		SELECT RESOURCE_ID,
+			    ID_NUMBER,
+			    USER_ALIAS,
+			    USER_PWD,
+			    ID_TYPE,
+			    BEGIN_TIME,
+			    END_TIME,
+			    UNIT_UID,
+			    UNIT_NAME,
+			    OFFICE_PHONE,
+			    USER_NAME,
+			    NICKNAME,
+			    USER_SEX,
+			    EMAIL,
+			    MOBILE,
+			    CARD_TYPE,
+			    CARD_ID,
+			    NATION,
+			    NATIVE_PLACE,
+			    TELEPHONE,
+			    BIRTHDAY,
+			    QQ_OPEN_ID,
+			    WECHAT_OPEN_ID,
+			    STYLE_TEMPLATE_ID,
+			    WECHAT_ID,
+			    QQ_ID,
+			    MOBILE_SHORT_NUMBER,
+			    POSITIONS,
+			    IMPORT_TIME,
+			    PROCESS_STATUS,
+			    PROCESS_ERROR_INFO,
+			    PROCESS_TIME,
+			    IS_ACTIVE,
+			    OPT_TYPE,
+			    LABLE_NAME
+			    <if test=" is_hmt!='' and is_hmt!=null ">
+				,IS_HMT 
+				</if>
+			FROM sys_import_user_info
+		 where resource_id = #{resource_id}
+	</select>
+	
+	<update id="updateImportUser">
+		update sys_import_user_info
+		set
+			process_time = <![CDATA[ <mysql> NOW() </mysql> <oracle> sysdate </oracle> ]]>, 
+			<if test=" PROCESS_STATUS =='2'.toString() ">
+			PROCESS_STATUS = '0', 
+			PROCESS_ERROR_INFO = '', 
+			</if>
+			ID_NUMBER = #{ID_NUMBER}, 
+			USER_PWD = #{USER_PWD}, 
+			USER_NAME = #{USER_NAME}, 
+			NATION = #{NATION}, 
+			BEGIN_TIME = #{BEGIN_TIME}, 
+			BIRTHDAY = #{BIRTHDAY}, 
+			NATIVE_PLACE = #{NATIVE_PLACE}, 
+			IS_ACTIVE = #{IS_ACTIVE}, 
+			CARD_TYPE = #{CARD_TYPE}, 
+			EMAIL = #{EMAIL}, 
+			ID_TYPE = #{ID_TYPE}, 
+			UNIT_NAME = #{UNIT_NAME}, 
+			UNIT_UID = #{UNIT_NAME_code}, 
+			USER_SEX = #{USER_SEX}, 
+			NICKNAME = #{NICKNAME}, 
+			END_TIME = #{END_TIME}, 
+			CARD_ID = #{CARD_ID},
+			MOBILE = #{MOBILE}, 
+			TELEPHONE = #{TELEPHONE},
+			OPT_TYPE = #{OPT_TYPE} 
+		WHERE RESOURCE_ID = #{RESOURCE_ID}
+	</update>
+	
+	<update id="updateImportUserInfo" parameterType="object">
+	   update sys_import_user_info
+          set process_time = <![CDATA[ 
+			<mysql>
+				NOW()
+			</mysql>
+			<oracle>
+				sysdate
+			</oracle>
+			]]>,
+              process_status = #{process_status},
+              process_error_info = #{process_error_info}
+        where resource_id = #{resource_id}
+     </update>
+     
+     <!-- 根据用户主键修改用户信息 -->
+	<update id="updUserByIdNumber">
+	/*ignoreParameter*/
+		UPDATE sys_uicm_user
+		SET 
+			<![CDATA[
+			 <mysql>
+			 	BEGIN_TIME = #{BEGIN_TIME,jdbcType=VARCHAR},
+				END_TIME = #{END_TIME,jdbcType=VARCHAR},
+				BIRTHDAY = #{BIRTHDAY,jdbcType=VARCHAR},
+			 </mysql>
+			 <oracle>
+			 	BEGIN_TIME = to_date(#{BEGIN_TIME,jdbcType=VARCHAR} ,  'yyyy-MM-dd hh24:mi:ss'),
+				END_TIME = to_date(#{END_TIME,jdbcType=VARCHAR} , 'yyyy-MM-dd'),
+				BIRTHDAY = to_date(#{BIRTHDAY,jdbcType=VARCHAR} , 'yyyy-MM-dd'),
+			 </oracle>
+			 ]]>
+			ID_TYPE = #{ID_TYPE,jdbcType=VARCHAR},
+			USER_PWD = #{USER_PWD,jdbcType=VARCHAR},
+			IS_ACTIVE = #{IS_ACTIVE,jdbcType=VARCHAR},
+			UNIT_UID  = #{UNIT_NAME_code,jdbcType=VARCHAR},
+			UNIT_NAME = #{UNIT_NAME,jdbcType=VARCHAR},
+			USER_NAME = #{USER_NAME,jdbcType=VARCHAR},
+			NICKNAME = #{NICKNAME,jdbcType=VARCHAR},
+			USER_SEX = #{USER_SEX,jdbcType=VARCHAR},
+			EMAIL = #{EMAIL,jdbcType=VARCHAR},
+			MOBILE = #{MOBILE,jdbcType=VARCHAR},
+			CARD_TYPE = #{CARD_TYPE,jdbcType=VARCHAR},
+			CARD_ID = #{CARD_ID,jdbcType=VARCHAR},
+			NATION = #{NATION,jdbcType=VARCHAR},
+			NATIVE_PLACE = #{NATIVE_PLACE,jdbcType=VARCHAR},
+			TELEPHONE = #{TELEPHONE,jdbcType=VARCHAR}
+	    where ID_NUMBER=#{ID_NUMBER}
+	</update>
+	
+	<delete id="deleteUserByIdNumber" parameterType="string">
+		delete from sys_uicm_user where ID_NUMBER = #{ID_NUMBER}
+	</delete>
+	
+	<!-- 设置启用停用 -->
+	<update id="setUserAccountStatus">
+		UPDATE sys_uicm_user
+		SET 
+			IS_ACTIVE = #{is_enable}
+	    <where>
+	    	<if test='is_all == "0"'>
+	        AND RESOURCE_ID IN
+	        <foreach item="resource_id" index="index" collection="resource_ids" open="(" separator="," close=")">
+	        #{resource_id}
+	        </foreach>
+	        </if>
+	    </where>
+	</update>
+	
+	<select id="getPosmAutUnitSqlStr" parameterType="object" resultType="java.util.Map">
+		/*ignoreParameter*/
+		${posmStr}
+	</select>
+	
+	<select id="getUserChange" parameterType="object" resultType="java.util.Map">
+		SELECT 
+				<![CDATA[
+				<mysql> 	
+				DATE_FORMAT(t.IMPORT_TIME,'%Y-%m-%d') IMPORT_TIME
+			   </mysql> 
+				<oracle>
+				to_char(t.IMPORT_TIME,'yyyy-mm-dd') IMPORT_TIME
+				</oracle>
+				]]>
+				,count(1) TALCOUNT,
+		       count(t1.resource_id) ADDCOUNT,
+		       count(t2.resource_id) DELCOUNT,
+		       count(t3.resource_id) UPDCOUNT
+			FROM sys_import_user_info t
+			  left join (select * from sys_import_user_info s1 where s1.OPT_TYPE = 'ADD') t1
+			    on t.resource_id = t1.resource_id
+			  left join (select *
+			               from sys_import_user_info s1
+			              where s1.OPT_TYPE = 'DELETE') t2
+			    on t.resource_id = t2.resource_id
+			  left join (select *
+			               from sys_import_user_info s1
+			              where s1.OPT_TYPE = 'UPDATE') t3
+			    on t.resource_id = t3.resource_id
+		 where 1 = 1
+		   <if test=" startDate!='' and startDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND t.PROCESS_TIME >= concat(#{startDate},' 00:00:00')
+			</mysql> 
+			<oracle>
+			AND t.PROCESS_TIME >= to_date(#{startDate}||' 00:00:00','yyyy-mm-dd hh24:mi:ss')
+			</oracle> 	
+			]]>
+		</if>
+		<if test=" endDate!='' and endDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND t.IMPORT_TIME  <= concat(#{endDate},' 23:59:59')
+			</mysql> 
+			<oracle>
+			AND t.IMPORT_TIME <= to_date(#{endDate}||' 23:59:59','yyyy-mm-dd hh24:mi:ss')
+			</oracle> 	
+			]]>
+		</if>
+		<![CDATA[
+		<mysql> 	
+			group by DATE_FORMAT(t.IMPORT_TIME,'%Y-%m-%d') 
+		</mysql> 
+		<oracle>
+			group by to_char(t.IMPORT_TIME,'yyyy-mm-dd') 
+		</oracle>
+		<mysql> 	
+			order by DATE_FORMAT(t.IMPORT_TIME,'%Y-%m-%d') asc
+		</mysql> 
+		<oracle>
+			order by to_char(t.IMPORT_TIME,'yyyy-mm-dd') asc
+		</oracle>
+		]]>
+	</select>
+	
+	<select id="getUserTypeChange" parameterType="object" resultType="java.util.Map">
+		/*ignoreParameter*/
+		SELECT 
+				<![CDATA[
+				<mysql> 	
+				DATE_FORMAT(t.IMPORT_TIME,'%Y-%m-%d') IMPORT_TIME
+			   </mysql> 
+				<oracle>
+				to_char(t.IMPORT_TIME,'yyyy-mm-dd') IMPORT_TIME
+				</oracle>
+				]]>
+				,count(1) TALCOUNT,
+				${typeSelectStr}
+			FROM sys_import_user_info t
+			  ${typeWhereStr}
+			
+		 where 1 = 1
+		   <if test=" startDate!='' and startDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND t.IMPORT_TIME >= concat(#{startDate},' 00:00:00')
+			</mysql> 
+			<oracle>
+			AND t.IMPORT_TIME >= to_date(#{startDate}||' 00:00:00','yyyy-mm-dd hh24:mi:ss')
+			</oracle> 	
+			]]>
+		</if>
+		<if test=" endDate!='' and endDate!=null ">
+			<![CDATA[
+			 <mysql> 	
+			AND t.IMPORT_TIME  <= concat(#{endDate},' 23:59:59')
+			</mysql> 
+			<oracle>
+			AND t.IMPORT_TIME <= to_date(#{endDate}||' 23:59:59','yyyy-mm-dd hh24:mi:ss')
+			</oracle> 	
+			]]>
+		</if>
+		<![CDATA[
+		<mysql> 	
+			group by DATE_FORMAT(t.IMPORT_TIME,'%Y-%m-%d') 
+		</mysql> 
+		<oracle>
+			group by to_char(t.IMPORT_TIME,'yyyy-mm-dd') 
+		</oracle>
+		<mysql> 	
+			order by DATE_FORMAT(t.IMPORT_TIME,'%Y-%m-%d') asc
+		</mysql> 
+		<oracle>
+			order by to_char(t.IMPORT_TIME,'yyyy-mm-dd') asc
+		</oracle>
+		]]>
+	</select>
+	
+	<!--   用户按类型异动统计明细   -->
+	<select id="getOptUserList" resultType="map">
+		SELECT i.RESOURCE_ID,
+			    i.ID_NUMBER,
+			    i.USER_ALIAS,
+			    i.USER_PWD,
+			    i.ID_TYPE,
+			    i.BEGIN_TIME,
+			    i.END_TIME,
+			    i.UNIT_UID,
+			    i.UNIT_NAME,
+			    i.OFFICE_PHONE,
+			    i.USER_NAME,
+			    i.NICKNAME,
+			    i.USER_SEX,
+			    i.EMAIL,
+			    i.MOBILE,
+			    i.CARD_TYPE,
+			    i.CARD_ID,
+			    i.NATION,
+			    i.NATIVE_PLACE,
+			    i.TELEPHONE,
+			    i.BIRTHDAY,
+			    i.QQ_OPEN_ID,
+			    i.WECHAT_OPEN_ID,
+			    i.STYLE_TEMPLATE_ID,
+			    i.WECHAT_ID,
+			    i.QQ_ID,
+			    i.MOBILE_SHORT_NUMBER,
+			    i.POSITIONS,
+			    i.IMPORT_TIME,
+			    i.PROCESS_STATUS,
+			    i.PROCESS_ERROR_INFO,
+			    i.PROCESS_TIME,
+			    i.IS_ACTIVE,
+			    i.OPT_TYPE
+			FROM sys_import_user_info i
+           left join dict_sys_usertype u on i.ID_TYPE = u.CODENAME
+		where 
+		  <![CDATA[
+				<mysql> 	
+				DATE_FORMAT(i.IMPORT_TIME,'%Y-%m-%d') = #{IMPORT_TIME}
+			   </mysql> 
+				<oracle>
+				to_char(i.IMPORT_TIME,'yyyy-mm-dd') = #{IMPORT_TIME}
+				</oracle>
+				]]>
+		<if test=" id_number!='' and id_number!=null ">
+			AND i.ID_NUMBER = #{id_number}
+		</if>
+		<if test=" userName!='' and userName!=null ">
+			AND i.USER_NAME LIKE  <![CDATA[ <mysql> concat("%",concat(tp_replace(#{userName}),'%')) </mysql> <oracle> '%'||(REPLACE(REPLACE(#{userName},'%','/%'),'_','/_'))||'%' </oracle> ]]>
+		</if>
+		<if test=" userType!='' and userType!=null ">
+			AND u.CODEVALUE =#{userType}
+		</if>
+		<if test=" userUnit!='' and userUnit!=null ">
+			AND i.UNIT_UID =#{userUnit}
+		</if>
+		<if test=" optType!='' and optType!=null ">
+			AND i.OPT_TYPE =#{optType}
+		</if>
+		order by i.IMPORT_TIME asc
+	</select>
+	
+	<!-- 获取用户类型下拉列表 -->
+	<select id="getUserTypeList" resultType="map">
+		select CODEVALUE, CODENAME, EXT1
+  		  from dict_sys_uum_user_type
+		 where is_valid = '1'
+		   <if test='searchType == "1"'>
+	        and
+	        <foreach item="item" index="index" collection="id_type" open="(" separator="or" close=")">
+	         ext1 like concat('%,',concat(#{item},',%'))
+	        </foreach>
+		   </if>
+		   <if test='searchType != "1"'>
+		   	and ext1 like concat('%,',concat(#{id_type},',%'))
+		   </if>
+		 order by ext1,orderattr asc
+	</select>
+	
+	<!-- 获取用户类别下拉列表 -->
+	<select id="getUserLeibieList" resultType="map">
+		select CODEVALUE, CODENAME, EXT1
+  		  from dict_sys_userleibie
+		 where is_valid = '1'
+		   <if test='searchType == "1"'>
+		   	and
+	        <foreach item="item" index="index" collection="id_type" open="(" separator="or" close=")">
+	         ext1 like concat('%,',concat(#{item},',%'))
+	        </foreach>
+		   </if>
+		   <if test='searchType != "1"'>
+		   	and ext1 like concat('%,',concat(#{id_type},',%'))
+		   </if>
+		 order by ext1, orderattr asc
+	</select>
+	
+	<!-- 删除用户设置数据 -->
+	<delete id="delIdTypeSetting" parameterType="string">
+		delete from sys_user_condition_setting where id_number = #{id_number}
+	</delete>
+	
+	<!-- 新增用户设置数据 -->
+	<insert id="saveIdTypeSetting">
+	insert into sys_user_condition_setting
+		  (id_number, id_type, user_leibie, user_type)
+		values
+		  (#{id_number}, #{id_type_db}, #{user_leibie_db}, #{user_type_db})
+	</insert>
+
+	<!-- 获取用户设置数据  -->
+	<select id="getIdTypeSetting" resultType="map">
+		select ID_NUMBER, ID_TYPE, USER_LEIBIE, USER_TYPE
+  		  from sys_user_condition_setting
+  		 where id_number = #{current_user}
+	</select>
+</mapper>
