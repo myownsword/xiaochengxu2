@@ -67,10 +67,16 @@
 		<property name="username" value="root" />
 		<property name="password" value="neusoft123" />
 		<property name="validationQuery" value="SELECT 'x' " />
- -->
+
 
 		<property name="url" value="jdbc:oracle:thin:@edu.neusoft.com:89/orcl" />
 		<property name="username" value="tp" />
+		<property name="password" value="neusoft" />
+		<property name="validationQuery" value="SELECT 'x' from dual " />
+ -->
+
+		<property name="url" value="jdbc:oracle:thin:@edu.neusoft.com:5233/tp" />
+		<property name="username" value="tp_dut" />
 		<property name="password" value="neusoft" />
 		<property name="validationQuery" value="SELECT 'x' from dual " />
 		<!-- 配置初始化大小、最小、最大 -->

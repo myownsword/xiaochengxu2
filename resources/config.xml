@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<item>
+		<!--工程根目录-->
+		<system_root>E:\IDEA\workspace\xiaochengxu\WebContent\</system_root>
+		<!-- CSS的路径 -->
+		<css_path>http://localhost/xcx</css_path>
+		<!-- javascript的路径 -->
+		<javascript_path>http://localhost/xcx</javascript_path>
+		<!-- 图片的路径 -->
+		<sys_image_path>http://localhost/xcx</sys_image_path>
+
+	</item>
+</configuration>

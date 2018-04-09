@@ -16,16 +16,17 @@ import java.util.Map;
  *
  * @author wenhm
  *
- * @param <T>注入的Service
- * @param <R>返回的数据类型
  */
 @Controller
-@RequestMapping("/sys/uacm/uum")
+@RequestMapping("/demo")
 public class DemoAction extends BaseAction<DemoService<Map<String,Object>>, Map<String,Object>> {
 
     @RequestMapping
     public String index(HttpServletRequest request , ModelMap model){
-
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("mapping","getIdentityTypeList");
+        List<Map<String,Object>> list = service.list(map);
+        model.addAttribute("list",list);
         return "demo/demo_index" ;
     }
 
