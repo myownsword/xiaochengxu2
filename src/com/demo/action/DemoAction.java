@@ -28,6 +28,7 @@ public class DemoAction extends BaseAction<DemoService<Map<String,Object>>, Map<
         List<Map<String,Object>> list = service.list(map);
         model.addAttribute("list",list);
         return "demo/demo_index" ;
+        //aa
     }
 
 
